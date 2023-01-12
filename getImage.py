@@ -5,11 +5,15 @@ import multiprocessing
 import time
 from tqdm import tqdm
 
-baseDir = "./images"
+baseDir = os.path.dirname(os.path.abspath(__file__))
+baseDir = input("Please input the base directory: ")
+# Check baseDir valid
+if not os.path.exists(baseDir):
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    print("Invalid baseDir, use default value: " + baseDir)
+
 
 # Download the images
-
-
 def download(url, picType):
     name = url.split('/')[-1]
     path = os.path.join(baseDir, "img"+picType, name)
@@ -75,11 +79,6 @@ def getUrl(num, picType):
 
 # Main function
 def main():
-    # Input saveDir
-    baseDir = input("Please input the path to save the images: ")
-    if not os.path.exists(baseDir):
-        print("The path does not exist, use default path: ./images")
-        baseDir = "./images"
     # Create a folder to save the images
     saveDir()
     # Get the image URL
