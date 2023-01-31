@@ -6,17 +6,22 @@ import time
 from tqdm import tqdm
 
 baseDir = os.path.dirname(os.path.abspath(__file__))
-baseDir = input("Please input the base directory: ")
-# Check baseDir valid
-if not os.path.exists(baseDir):
+
+
+def init():
+    global baseDir
     baseDir = os.path.dirname(os.path.abspath(__file__))
-    print("Invalid baseDir, use default value: " + baseDir)
+    baseDir = input("Please input the base directory: ")
+    # Check baseDir valid
+    if not os.path.exists(baseDir):
+        baseDir = os.path.dirname(os.path.abspath(__file__))
+        print("Invalid baseDir, use default value: " + baseDir)
 
 
 # Download the images
-def download(url, picType):
+def download(url, envir):
     name = url.split('/')[-1]
-    path = os.path.join(baseDir, "img"+picType, name)
+    path = os.path.join(envir[1], "img"+envir[0], name)
     if os.path.exists(path):
         # print("Existed image: " + path)
         return
@@ -29,11 +34,12 @@ def download(url, picType):
                 # print("Downloaded image: " + name + "to " + path)
     finally:
         time.sleep(0.4)
-        download(url, picType)
+        download(url, envir)
 
 
 # Create a folder to save the images
 def saveDir():
+    global baseDir
     if not os.path.exists(os.path.join(baseDir, "imgpc")):
         os.mkdir(os.path.join(baseDir, "imgpc"))
     if not os.path.exists(os.path.join(baseDir, "imgmp")):
@@ -79,6 +85,7 @@ def getUrl(num, picType):
 
 # Main function
 def main():
+    global baseDir
     # Create a folder to save the images
     saveDir()
     # Get the image URL
@@ -107,10 +114,11 @@ def main():
         urlList = getUrl(numImages, picType)
     # Download the images with multi-processing
     with multiprocessing.Pool(numProcess) as p:
-        result = list(tqdm(p.imap(partial(download, picType=picType),
+        result = list(tqdm(p.imap(partial(download, envir=[picType,baseDir]),
                       urlList), total=len(urlList), desc="Downloading Images"))
 
 
 if __name__ == '__main__':
-
+    init()
+    print(baseDir)
     main()
