@@ -76,9 +76,12 @@ def getUrl(num, picType):
         print("The number of images is too small, min 1")
         num = 1
     # Get the image URL
+    headers = {
+        'Referer':'https://weibo.com/'
+    }
     url = 'https://iw233.cn/api.php?sort=' + \
         picType + '&type=json&num=' + str(num)
-    html = requests.get(url).json()
+    html = requests.get(url,headers=headers).json()
     urlList = html['pic']
     return urlList
 
