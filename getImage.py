@@ -1,3 +1,6 @@
+# Author: Zhekai Xu
+# Date: 2023-10-08
+# Description: Get images from iw233.cn
 from functools import partial
 import requests
 import os
@@ -7,7 +10,7 @@ from tqdm import tqdm
 
 baseDir = os.path.dirname(os.path.abspath(__file__))
 
-
+# Initialize the baseDir
 def init():
     global baseDir
     baseDir = os.path.dirname(os.path.abspath(__file__))
